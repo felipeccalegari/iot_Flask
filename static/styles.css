@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+#data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#temp-celsius {
+    font-size: 24px;
+    color: #023b77;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 100px;
+}
+
+#temp_farenheit {
+    font-size: 24px;
+    color: #023b77;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 100px;
+}
+
+#humidity {
+    font-size: 24px;
+    color: #023b77;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 100px;
+}
+
+p {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0;
+}
+
+span {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+#btrefresh {
+    line-height: 20px;
+    width: 60px;
+    font-size: 10pt;
+    font-family: tahoma;
+    margin-top: 1px;
+    margin-right: 2px;
+    position:absolute;
+    top:0;
+    right:0;
+
+    
+}
+
+/* Add any additional CSS styles here as needed */
+

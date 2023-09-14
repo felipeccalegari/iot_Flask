@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MQTT Data Display</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>MQTT Data Display</h1>
+    <div id="data-container">
+        <p>Temperature (Celsius): <span id="temp-celsius"></span></p>
+        <p>Temperature (Fahrenheit): <span id="temp_farenheit"></span></p>
+        <p>Humidity: <span id="humidity"></span></p>
+    </div>
+    <button id="btrefresh" onClick="fetchLatestData();">Refresh</button>
+    <canvas id="line-chart"></canvas>
+    <script>
+        function fetchLatestData() {
+        fetch('/latest_data')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Latest data:', data);
+                document.getElementById('temp-celsius').textContent = data.temp_celsius + ' °C';
+                document.getElementById('temp_farenheit').textContent = data.temp_farenheit + ' °F';
+                document.getElementById('humidity').textContent = data.humidity + '%';
+
+                labels.push(new Date().toLocaleTimeString());
+                tempcData.push(data.temp_celsius);
+                tempfData.push(data.temp_farenheit);
+                humidData.push(data.humidity);
+
+                if (labels.length > 10) {
+                    labels.shift();
+                    tempcData.shift();
+                    tempfData.shift();
+                    humidData.shift();
+                }
+
+                myLineChart.update();
+            })
+            .catch(error => {
+                console.error('Error fetching latest data:', error);
+            });
+    }
+
+        fetchLatestData();
+
+        setInterval(fetchLatestData, 5000);
+    </script>
+</body>
+<head>
+    <title>DHT22 Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>DHT22 Chart</h1>
+    
+    <canvas id="line-chart"></canvas>
+
+    <script>
+    var labels = {{ labels_json | safe }};
+    var tempcData = {{ tempc_data_json | safe }};
+    var tempfData = {{ tempf_data_json | safe }};
+    var humidData = {{ humid_data_json | safe }};
+
+    var ctx = document.getElementById('line-chart').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temp Celsius',
+                data: tempcData,
+                borderColor: 'rgb(75, 192, 192)',
+                fill: false
+            }, {
+                label: 'Temp Farenheit',
+                data: tempfData,
+                borderColor: 'rgb(255, 99, 132)',
+                fill: false
+            }, {
+                label: 'Humidity',
+                data: humidData,
+                borderColor: 'rgb(54, 162, 235)',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            events: []
+        }
+    });
+    </script>
+</body>
+</html>

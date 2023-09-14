@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MQTT Data Display</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>MQTT Data Display</h1>
+    <div id="data-container">
+        <p>Temperature (Fahrenheit): <span id="temp_farenheit"></span></p>
+
+    </div>
+    <button id="btrefresh" onClick="fetchLatestData();">Refresh</button>
+    <canvas id="line-chart"></canvas>
+    <script>
+        function fetchLatestData() {
+        fetch('/latest_data')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Latest data:', data);
+                document.getElementById('temp_farenheit').textContent = data.temp_farenheit + ' °F';
+
+                labels.push(new Date().toLocaleTimeString());
+                tempfData.push(data.temp_farenheit);
+
+                if (labels.length > 10) {
+                    labels.shift();
+                    tempfData.shift();
+
+                }
+
+                myLineChart.update();
+            })
+            .catch(error => {
+                console.error('Error fetching latest data:', error);
+            });
+    }
+
+        fetchLatestData();
+
+        setInterval(fetchLatestData, 5000);
+    </script>
+</body>
+<head>
+    <title>TempF Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>TempF Chart</h1>
+    
+    <canvas id="line-chart"></canvas>
+
+    <script>
+    var labels = {{ labels_json | safe }};
+    var tempfData = {{ tempf_data_json | safe }};
+
+    var ctx = document.getElementById('line-chart').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temp Fahrenheit',
+                data: tempfData,
+                borderColor: 'rgb(75, 192, 192)',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            events: []
+        }
+    });
+    </script>
+</body>
+</html>
